@@ -15,7 +15,7 @@ class Config:
     block_size = 128
     n_layer = 4
     n_head = 4
-    n_embd = 160
+    n_embd = 192
     dropout = 0.0
     tie_weights = False
 
