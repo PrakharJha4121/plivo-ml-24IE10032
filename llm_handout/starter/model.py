@@ -1,3 +1,6 @@
+
+
+
 """
 A small GPT in plain PyTorch. Yours to modify or replace entirely —
 attention, SSM, whatever — as long as evaluate.py still works and the
@@ -11,13 +14,13 @@ import torch.nn.functional as F
 
 
 class Config:
-    vocab_size = 256      # byte-level tokenizer default
-    block_size = 128
+    vocab_size = 384      # updated for CharByte Tokenizer
+    block_size = 160
     n_layer = 4
-    n_head = 4
+    n_head = 6
     n_embd = 192
     dropout = 0.0
-    tie_weights = False
+    tie_weights = True
 
 
 class SelfAttention(nn.Module):

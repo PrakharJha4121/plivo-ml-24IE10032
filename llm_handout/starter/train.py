@@ -1,18 +1,10 @@
+
 """
-Baseline trainer. It WORKS and it is MEDIOCRE ON PURPOSE. Your hour goes
-into changing what it does — schedule, init, optimizer, architecture,
-tokenizer — inside the hard caps.
-
-HARD CAPS (checked at grading, violations = disqualified run):
-  * max 2,000 optimizer steps in the run that produces your checkpoint
-  * max 2,000,000 total parameters
-  * training text: the provided train_corpus.txt only
-  * pure PyTorch / numpy / stdlib; no pretrained anything
-
-    python train.py --data ../data/train_corpus.txt --steps 2000 --out ckpt.pt
+Baseline trainer with Char-Byte Tokenizer integration.
 """
 import argparse
 import time
+import os
 
 import torch
 
@@ -35,8 +27,8 @@ def main():
     ap.add_argument("--data", required=True)
     ap.add_argument("--steps", type=int, default=2000)
     ap.add_argument("--batch", type=int, default=8)
-    ap.add_argument("--lr", type=float, default=3e-4)
-    ap.add_argument("--grad_clip", type=float, default=0.0)
+    ap.add_argument("--lr", type=float, default=6e-4) # Bumped based on your findings
+    ap.add_argument("--grad_clip", type=float, default=1.0) # Added clip just in case
     ap.add_argument("--seed", type=int, default=1337)
     ap.add_argument("--out", default="ckpt.pt")
     ap.add_argument("--log_every", type=int, default=100)
@@ -49,6 +41,16 @@ def main():
     device = "cpu"
 
     text = open(args.data, encoding="utf-8").read()
+    
+    # Check if we need to train the tokenizer
+    vocab_path = os.path.join(os.path.dirname(tokenizer_mod.__file__), "vocab.json")
+    if not os.path.exists(vocab_path):
+        print("Training custom Char-Byte tokenizer (vocab_size=384)...")
+        tok = tokenizer_mod.CharByteTokenizer()
+        tok.train(text, target_vocab_size=384)
+        tok.save(vocab_path)
+
+    # Load and encode
     tok = tokenizer_mod.load()
     ids = torch.tensor(tok.encode(text), dtype=torch.long)
 
@@ -66,7 +68,6 @@ def main():
     print(f"model: {n:,} params")
     assert n <= MAX_PARAMS, f"cap: max {MAX_PARAMS:,} params"
 
-    # Baseline optimizer.
     opt = torch.optim.Adam(
         model.parameters(),
         lr=args.lr
@@ -86,7 +87,6 @@ def main():
 
         loss.backward()
 
-        # Optional gradient clipping.
         if args.grad_clip > 0:
             torch.nn.utils.clip_grad_norm_(
                 model.parameters(),
@@ -108,7 +108,6 @@ def main():
                 f"({(time.time()-t0)/step*1000:.0f} ms/step)"
             )
 
-    # Every public config attribute is saved.
     torch.save(
         {
             "model": model.state_dict(),
