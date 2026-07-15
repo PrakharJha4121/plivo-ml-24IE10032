@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Plivo LLM Challenge - Final Submission Report</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+margin:40px;
+line-height:1.8;
+color:#222;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+}
+
+h1{
+text-align:center;
+font-size:48px;
+margin-bottom:5px;
+}
+
+h2{
+margin-top:40px;
+padding:12px;
+background:#111827;
+color:white;
+border-radius:8px;
+}
+
+.card{
+background:white;
+padding:22px;
+margin-top:18px;
+border-radius:10px;
+box-shadow:0 0 12px rgba(0,0,0,0.08);
+}
+
+.center{
+text-align:center;
+}
+
+.big{
+font-size:32px;
+font-weight:bold;
+}
+
+.good{
+color:green;
+font-weight:bold;
+}
+
+.code{
+background:#eeeeee;
+padding:15px;
+border-radius:8px;
+font-family:monospace;
+white-space:pre-line;
+}
+
+ul{
+line-height:2;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+border:1px solid #cccccc;
+}
+
+th{
+background:#111827;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="container">
+
+
+<h1>Plivo LLM Challenge</h1>
+
+<p class="center">
+Final Submission Report
+</p>
+
+
+
+<h2>Final Results</h2>
+
+<div class="card center">
+
+<p class="big">
+Final Development BPB : 2.0845
+</p>
+
+<p>
+Baseline Development BPB : 2.3718
+</p>
+
+<p>
+Absolute Improvement : 0.2873 BPB
+</p>
+
+<p>
+Relative Improvement : ~12.11%
+</p>
+
+<p>
+Selected Final Submission Model : 1,906,560 Parameters
+</p>
+
+<p>
+Optimizer Steps Used : 2000 / 2000
+</p>
+
+<p>
+15 Experimental Runs were performed and analyzed throughout development.
+</p>
+
+</div>
+
+
+
+
+<h2>Selected Final Submission Model</h2>
+
+<div class="card">
+
+<ul>
+
+<li>4 Layer GPT-style Decoder Only Language Model implemented entirely in PyTorch.</li>
+
+<li>192 Dimensional Token Embeddings.</li>
+
+<li>6 Attention Heads.</li>
+
+<li>Context Length = 160.</li>
+
+<li>GPT-2 Style Scaled Residual Initialization.</li>
+
+<li>Gradient Clipping = 1.0.</li>
+
+<li>Learning Rate = 6e-4.</li>
+
+<li>Adam Optimizer.</li>
+
+<li>Greedy Longest Match UTF-8 Tokenizer.</li>
+
+<li>Vocabulary Size = 500.</li>
+
+<li>Lossless UTF-8 Encoding with Byte Level Fallback.</li>
+
+</ul>
+
+</div>
+
+
+
+<h2>Implementation Details</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Implemented entirely using pure PyTorch, NumPy and Python standard libraries.</li>
+
+<li>No pretrained weights were used at any stage of experimentation.</li>
+
+<li>The tokenizer was trained exclusively on the provided training corpus.</li>
+
+<li>All experiments were performed entirely on CPU.</li>
+
+<li>No external language modeling libraries or pretrained models were utilized.</li>
+
+<li>The final model satisfies all parameter and optimizer step constraints specified in the challenge statement.</li>
+
+</ul>
+
+</div>
+
+
+
+
+<h2>Performance Journey</h2>
+
+<div class="card">
+
+<table>
+
+<tr>
+<th>Experiment</th>
+<th>Development BPB</th>
+</tr>
+
+<tr><td>Baseline</td><td>2.3718</td></tr>
+<tr><td>AdamW + Weight Decay</td><td>2.3723</td></tr>
+<tr><td>Gradient Clipping</td><td>2.3526</td></tr>
+<tr><td>Cosine LR Decay</td><td>2.6273</td></tr>
+<tr><td>Gradient Clipping + LR = 6e-4</td><td>2.2423</td></tr>
+<tr><td>LR = 1e-3</td><td>2.2432</td></tr>
+<tr><td>Weight Tying</td><td>2.2543</td></tr>
+<tr><td>Context Length = 256</td><td>2.2520</td></tr>
+<tr><td>Scaled Residual Initialization</td><td>2.2360</td></tr>
+<tr><td>Embedding Dimension = 192</td><td>2.2161</td></tr>
+<tr><td>Char-Byte Tokenizer</td><td>2.1212</td></tr>
+<tr><td>Greedy Tokenizer (512 Vocabulary)</td><td>2.1114</td></tr>
+<tr><td>Context Length = 160</td><td>2.0953</td></tr>
+<tr><td><b>6 Attention Heads (FINAL)</b></td><td><b>2.0845</b></td></tr>
+
+</table>
+
+</div>
+
+
+
+
+<h2>Tokenizer Improvements</h2>
+
+<div class="card center">
+
+<p class="big">
+Baseline Token Count
+</p>
+
+<p>
+7,318,592 Tokens
+</p>
+
+<p>
+↓
+</p>
+
+<p class="big">
+Char-Byte Tokenizer
+</p>
+
+<p>
+5,705,468 Tokens
+</p>
+
+<p>
+↓
+</p>
+
+<p class="big">
+Final Greedy Tokenizer
+</p>
+
+<p>
+5,483,950 Tokens
+</p>
+
+<p class="good">
+Approximately 25% Reduction in Effective Token Count.
+</p>
+
+<p>
+Tokenization modifications produced the single largest improvement throughout experimentation by substantially improving context utilization while preserving lossless UTF-8 encoding.
+</p>
+
+</div>
+
+
+
+
+<h2>Successful Experiments</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Gradient Clipping.</li>
+
+<li>Increasing the Learning Rate.</li>
+
+<li>GPT-2 Style Scaled Residual Initialization.</li>
+
+<li>Increasing Embedding Dimensions.</li>
+
+<li>Greedy Longest Match UTF-8 Tokenization.</li>
+
+<li>Increasing Context Length from 128 to 160.</li>
+
+<li>Increasing the Number of Attention Heads.</li>
+
+</ul>
+
+</div>
+
+
+
+
+<h2>Unsuccessful Experiments</h2>
+
+<div class="card">
+
+<ul>
+
+<li>AdamW with Weight Decay.</li>
+
+<li>Cosine Learning Rate Scheduling.</li>
+
+<li>Aggressive Learning Rate Increase.</li>
+
+<li>Weight Tying.</li>
+
+<li>Large Context Length (256).</li>
+
+<li>Alternative Vocabulary Allocation Strategies.</li>
+
+</ul>
+
+<p>
+
+All unsuccessful experiments were retained and analyzed rather than discarded. Their outcomes significantly influenced subsequent design decisions and helped identify optimization and tokenization bottlenecks throughout development.
+
+</p>
+
+</div>
+
+
+
+
+
+<h2>Challenge Constraint Satisfaction</h2>
+
+<div class="card">
+
+<table>
+
+<tr>
+<th>Constraint</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>Maximum Parameters (2 Million)</td>
+<td>Satisfied (1,906,560)</td>
+</tr>
+
+<tr>
+<td>Maximum Optimizer Steps (2000)</td>
+<td>Satisfied (2000)</td>
+</tr>
+
+<tr>
+<td>CPU Only Training</td>
+<td>Satisfied</td>
+</tr>
+
+<tr>
+<td>Training Corpus Restrictions</td>
+<td>Satisfied</td>
+</tr>
+
+<tr>
+<td>Lossless UTF-8 Tokenization</td>
+<td>Satisfied</td>
+</tr>
+
+<tr>
+<td>Pure PyTorch Implementation</td>
+<td>Satisfied</td>
+</tr>
+
+<tr>
+<td>No Pretrained Weights</td>
+<td>Satisfied</td>
+</tr>
+
+</table>
+
+</div>
+
+
+
+
+
+<h2>Key Observations</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Tokenizer modifications produced substantially larger gains than individual architectural modifications.</li>
+
+<li>Optimization improvements provided significant gains during the early stages of experimentation.</li>
+
+<li>Training loss continued decreasing at step 2000 across multiple successful runs.</li>
+
+<li>The final model does not appear to have completely converged under the available optimization budget.</li>
+
+<li>The primary bottleneck of the challenge appears to be the strict optimizer step constraint rather than parameter count limitations.</li>
+
+<li>The experimental results suggest that additional optimization steps would likely yield further improvements even without increasing model size.</li>
+
+</ul>
+
+</div>
+
+
+
+
+<h2>Human Contributions</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Designed and selected optimization experiments.</li>
+
+<li>Performed architecture exploration while respecting parameter constraints.</li>
+
+<li>Designed tokenizer modifications and vocabulary allocation strategies.</li>
+
+<li>Performed ablation studies across optimization, architecture and tokenization choices.</li>
+
+<li>Analyzed both successful and unsuccessful experiments and incorporated their findings into subsequent iterations.</li>
+
+<li>Selected the final submission model after extensive experimentation.</li>
+
+</ul>
+
+</div>
+
+
+
+
+<h2>AI Assisted Contributions</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Assisted in brainstorming experimental alternatives.</li>
+
+<li>Provided implementation suggestions for optimization, architecture and tokenizer modifications.</li>
+
+<li>Assisted in debugging and reviewing code modifications.</li>
+
+<li>Assisted in documenting experimental observations and preparing submission artifacts.</li>
+
+</ul>
+
+</div>
+
+
+
+
+<h2>Future Work</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Further optimization under relaxed optimizer step constraints.</li>
+
+<li>More expressive multilingual lossless tokenization strategies.</li>
+
+<li>Additional experimentation with optimization schedules.</li>
+
+<li>Further architecture exploration while remaining within parameter constraints.</li>
+
+</ul>
+
+</div>
+
+
+
+
+
+<h2>Final Remarks</h2>
+
+<div class="card">
+
+<p>
+
+The final submission improves upon the baseline development score by approximately 12.11% while satisfying all optimization, parameter and implementation constraints of the challenge. Multiple successful experiments exhibited decreasing training loss at the final optimization step suggesting that the model had not completely converged under the available optimization budget. Both successful and unsuccessful experiments have been retained and analyzed throughout development, with tokenization improvements providing the largest gains among all explored modifications. The selected final submission model represents the strongest balance between performance, parameter efficiency, robustness and adherence to the challenge constraints.
+
+</p>
+
+</div>
+
+
+
+</div>
+
+
+</body>
+</html>
